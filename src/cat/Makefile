@@ -10,4 +10,4 @@ s21_cat.o:  s21_cat.c
 	$(CC) $(CFLAGS) s21_cat.c s21_cat.h
 
 clean:
-	rm -rf *.o *.so *.h.gch *.dSYM s21_cat
+	rm -rf *.o *.so *.h.gch *.dSYM *.log s21_cat
