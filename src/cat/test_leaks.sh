@@ -49,8 +49,9 @@ gnu=(
 "test_files/test_1_cat.txt --number --number"
 )
 run_test() {
+    echo
     param=$(echo $@ | sed "s/FLAGS/$var/")
-    echo "valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose -q --log-file="${s21_command[@]}".log ./"${s21_command[@]}" $param > /dev/null"
+    # echo "valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose -q --log-file="${s21_command[@]}".log ./"${s21_command[@]}" $param > /dev/null"
     valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose -q --log-file="${s21_command[@]}".log ./"${s21_command[@]}" $param > /dev/null
     leak=$(grep -ic -A10000 "LEAK SUMMARY:" "${s21_command[@]}".log || true)
     echo "Leak = $leak"
