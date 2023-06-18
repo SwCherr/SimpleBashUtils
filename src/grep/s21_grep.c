@@ -38,8 +38,10 @@ int main(int args, char *argv[]) {
     }
 
     argv += optind;
-    if (optind > 0) IS_FLAG = 1;
-    if ((args - (optind + 1)) > 1) mult_file_flag = 1;
+    if (optind > 0)
+      IS_FLAG = 1;
+    if ((args - (optind + 1)) > 1)
+      mult_file_flag = 1;
     openfile(argv);
   }
   return 0;
@@ -47,47 +49,39 @@ int main(int args, char *argv[]) {
 
 void openfile(char *argv[]) {
   char expression[1024];
-  if (fflag) {
-    FILE *fp_regex = NULL;
-    fp_regex = fopen(argv[0], "r");
-    fgets(expression, 1024, fp_regex);
-    fclose(fp_regex);
-    argv += 1;
-  } else {
-    strcpy(expression, argv[0]);
-    argv += 1;
-  }
+  strcpy(expression, argv[0]);
+  argv += 1;
 
   char *file_name;
   int i = 0;
   while ((file_name = argv[i]) != NULL || i == 0) {
     FILE *fp = NULL;
     if (file_name == NULL) {
-      if (!sflag) {
+      if (!sflag)
         fprintf(stderr, "usage: grep [-eivclnhsfo] template [file ...]\n");
-        exit(1);
-      }
+      fclose(fp);
     } else
       fp = fopen(file_name, "r");
 
     if (fp) {
       cook_grep(fp, expression, file_name);
+      fclose(fp);
     } else if (!sflag)
       fprintf(stderr, "grep: %s: No such file or directory\n", argv[i]);
-
     ++i;
-    fclose(fp);
   }
 }
 
 void cook_grep(FILE *fp, char expression[], char *file_name) {
   regex_t regex;
   int compile_res;
+  compile_res = compile_regex(&regex, expression);
 
-  if (0 != (compile_res = compile_regex(&regex, expression))) {
+  if (compile_res != 0) {
     fprintf(stderr,
             "Invalid regular expression. Compilation error: error: %d.\n",
             compile_res);
+    regfree(&regex);
     exit(1);
   } else {
     int flag_match = 0;
@@ -100,11 +94,14 @@ void cook_grep(FILE *fp, char expression[], char *file_name) {
         func_oflag(current_str, regex);
       else {
         int is_match = regexec(&regex, current_str, 0, NULL, 0);
-        if (vflag) is_match = (!is_match);
+        if (vflag)
+          is_match = (!is_match);
         if (is_match == 0) {
           if (!cflag && !lflag) {
-            if (mult_file_flag && !hflag) printf("%s:", file_name);
-            if (nflag) printf("%d:", number_str);
+            if (mult_file_flag && !hflag)
+              printf("%s:", file_name);
+            if (nflag)
+              printf("%d:", number_str);
 
             if (!oflag)
               printf("%s", current_str);
@@ -119,16 +116,22 @@ void cook_grep(FILE *fp, char expression[], char *file_name) {
       }
       number_str++;
     }
-    if (cflag) printf("%d", count_match_str);
-    if (lflag && flag_match) printf("%s", file_name);
-    if (flag_match && (!vflag || lflag || cflag)) printf("\n");
+    if (cflag)
+      printf("%d", count_match_str);
+    if (lflag && flag_match)
+      printf("%s", file_name);
+    if (flag_match && (!vflag || lflag || cflag))
+      printf("\n");
   }
   regfree(&regex);
 }
 
 int compile_regex(regex_t *regex, char expression[]) {
-  int compile_res = regcomp(regex, expression, 0);
-  if (iflag) compile_res = regcomp(regex, expression, REG_ICASE);
+  int compile_res;
+  if (iflag)
+    compile_res = regcomp(regex, expression, REG_ICASE);
+  else
+    compile_res = regcomp(regex, expression, 0);
   return compile_res;
 }
 
@@ -148,7 +151,8 @@ void func_oflag(char str[], regex_t regex) {
 }
 
 void print_str(int beggin, int end, char string[]) {
-  for (int i = beggin; i < end; i++) printf("%c", string[i]);
+  for (int i = beggin; i < end; i++)
+    printf("%c", string[i]);
   printf("\n");
 }
 
