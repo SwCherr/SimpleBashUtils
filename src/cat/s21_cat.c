@@ -1,39 +1,34 @@
 #include "s21_cat.h"
 
 int main(int args, char *argv[]) {
-  FILE *fp = NULL;
-  fp = fopen(argv[1], "r");
+  const char *short_options = "benstvET";
+  const struct option long_options[] = {
+      {"number-nonblank", no_argument, NULL, 'b'},
+      {"number", no_argument, NULL, 'n'},
+      {"squeeze-blank", no_argument, NULL, 's'},
+      {NULL, 0, NULL, 0}};
 
-  if (fp == NULL) {
-    const char *short_options = "benstvET";
-    const struct option long_options[] = {
-        {"number-nonblank", no_argument, NULL, 'b'},
-        {"number", no_argument, NULL, 'n'},
-        {"squeeze-blank", no_argument, NULL, 's'},
-        {NULL, 0, NULL, 0}};
-
-    int option;
-    while ((option = getopt_long(args, argv, short_options, long_options,
-                                NULL)) != -1) {
-      if (option == 'b')
-        bflag = nflag = 1;
-      else if (option == 'e')
-        eflag = vflag = 1;
-      else if (option == 'n')
-        nflag = 1;
-      else if (option == 's')
-        sflag = 1;
-      else if (option == 't')
-        tflag = vflag = 1;
-      else if (option == 'v')
-        vflag = 1;
-      else if (option == 'E')
-        eflag = 1;
-      else if (option == 'T')
-        tflag = 1;
-      else {
-        usage();
-      }
+  int option;
+  while ((option = getopt_long(args, argv, short_options, long_options,
+                               NULL)) != -1) {
+    if (option == 'b')
+      bflag = nflag = 1;
+    else if (option == 'e')
+      eflag = vflag = 1;
+    else if (option == 'n')
+      nflag = 1;
+    else if (option == 's')
+      sflag = 1;
+    else if (option == 't')
+      tflag = vflag = 1;
+    else if (option == 'v')
+      vflag = 1;
+    else if (option == 'E')
+      eflag = 1;
+    else if (option == 'T')
+      tflag = 1;
+    else {
+      usage();
     }
   }
 
@@ -42,13 +37,12 @@ int main(int args, char *argv[]) {
     scanfiles(argv, 1);
   else
     scanfiles(argv, 0);
-  fclose(fp);
   return 0;
 }
 
 void usage() {
-    fprintf(stderr, "usage: cat [-benstuv] [file ...]\n");
-    exit(1);
+  fprintf(stderr, "usage: cat [-benstuv] [file ...]\n");
+  exit(1);
 }
 
 void scanfiles(char *argv[], int is_flag) {
@@ -81,8 +75,10 @@ void scanfiles(char *argv[], int is_flag) {
     }
 
     ++i;
-    if (file_name != stdin) fclose(file_name);
-    if (path == NULL) break;
+    if (file_name != stdin)
+      fclose(file_name);
+    if (path == NULL)
+      break;
   }
 }
 
@@ -96,7 +92,8 @@ void cook_cat(FILE *fp) {
     if (prev == '\n') {
       if (sflag) {
         if (ch == '\n') {
-          if (gobble) flag_continue = 1;
+          if (gobble)
+            flag_continue = 1;
           gobble = 1;
         } else
           gobble = 0;
@@ -111,7 +108,8 @@ void cook_cat(FILE *fp) {
 
     if (!flag_continue) {
       if (ch == '\n') {
-        if (eflag) putchar('$');
+        if (eflag)
+          putchar('$');
       } else if (ch == '\t') {
         if (tflag) {
           putchar('^');
@@ -130,7 +128,8 @@ void cook_cat(FILE *fp) {
           flag_continue = 1;
         }
       }
-      if (!flag_continue) putchar(ch);
+      if (!flag_continue)
+        putchar(ch);
     }
     flag_continue = 0;
   }
