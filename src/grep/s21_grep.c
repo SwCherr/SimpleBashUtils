@@ -38,10 +38,8 @@ int main(int args, char *argv[]) {
     }
 
     argv += optind;
-    if (optind > 0)
-      IS_FLAG = 1;
-    if ((args - (optind + 1)) > 1)
-      mult_file_flag = 1;
+    if (optind > 0) IS_FLAG = 1;
+    if ((args - (optind + 1)) > 1) mult_file_flag = 1;
     openfile(argv);
   }
   return 0;
@@ -94,14 +92,11 @@ void cook_grep(FILE *fp, char expression[], char *file_name) {
         func_oflag(current_str, regex);
       else {
         int is_match = regexec(&regex, current_str, 0, NULL, 0);
-        if (vflag)
-          is_match = (!is_match);
+        if (vflag) is_match = (!is_match);
         if (is_match == 0) {
           if (!cflag && !lflag) {
-            if (mult_file_flag && !hflag)
-              printf("%s:", file_name);
-            if (nflag)
-              printf("%d:", number_str);
+            if (mult_file_flag && !hflag) printf("%s:", file_name);
+            if (nflag) printf("%d:", number_str);
 
             if (!oflag)
               printf("%s", current_str);
@@ -116,12 +111,9 @@ void cook_grep(FILE *fp, char expression[], char *file_name) {
       }
       number_str++;
     }
-    if (cflag)
-      printf("%d", count_match_str);
-    if (lflag && flag_match)
-      printf("%s", file_name);
-    if (flag_match && (!vflag || lflag || cflag))
-      printf("\n");
+    if (cflag) printf("%d", count_match_str);
+    if (lflag && flag_match) printf("%s", file_name);
+    if (flag_match && (!vflag || lflag || cflag)) printf("\n");
   }
   regfree(&regex);
 }
@@ -151,8 +143,7 @@ void func_oflag(char str[], regex_t regex) {
 }
 
 void print_str(int beggin, int end, char string[]) {
-  for (int i = beggin; i < end; i++)
-    printf("%c", string[i]);
+  for (int i = beggin; i < end; i++) printf("%c", string[i]);
   printf("\n");
 }
 

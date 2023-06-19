@@ -75,10 +75,8 @@ void scanfiles(char *argv[], int is_flag) {
     }
 
     ++i;
-    if (file_name != stdin)
-      fclose(file_name);
-    if (path == NULL)
-      break;
+    if (file_name != stdin) fclose(file_name);
+    if (path == NULL) break;
   }
 }
 
@@ -92,8 +90,7 @@ void cook_cat(FILE *fp) {
     if (prev == '\n') {
       if (sflag) {
         if (ch == '\n') {
-          if (gobble)
-            flag_continue = 1;
+          if (gobble) flag_continue = 1;
           gobble = 1;
         } else
           gobble = 0;
@@ -108,8 +105,7 @@ void cook_cat(FILE *fp) {
 
     if (!flag_continue) {
       if (ch == '\n') {
-        if (eflag)
-          putchar('$');
+        if (eflag) putchar('$');
       } else if (ch == '\t') {
         if (tflag) {
           putchar('^');
@@ -128,8 +124,7 @@ void cook_cat(FILE *fp) {
           flag_continue = 1;
         }
       }
-      if (!flag_continue)
-        putchar(ch);
+      if (!flag_continue) putchar(ch);
     }
     flag_continue = 0;
   }
