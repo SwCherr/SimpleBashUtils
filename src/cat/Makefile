@@ -3,11 +3,9 @@ CFLAGS = -c -Wall -Wextra -Werror -ggdb3
 
 all: s21_cat
 
-s21_cat: s21_cat.o
-	$(CC) s21_cat.o -o s21_cat
-
-s21_cat.o:  s21_cat.c
-	$(CC) $(CFLAGS) s21_cat.c s21_cat.h
-
+s21_cat:
+	$(CC) $(CFLAGS) s21_cat.c -o s21_cat
+	rm -rf *.log
+	
 clean:
-	rm -rf *.o *.so *.h.gch *.dSYM *.log s21_cat
+	rm -rf *.log s21_cat
